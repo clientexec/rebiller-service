@@ -11,45 +11,45 @@ class PluginRebiller extends ServicePlugin
     function getVariables()
     {
         $variables = array(
-            /*T*/'Plugin Name'/*/T*/   => array(
+            lang('Plugin Name')   => array(
                 'type'          => 'hidden',
-                'description'   => /*T*/''/*/T*/,
-                'value'         => /*T*/'Invoice Reminder'/*/T*/,
+                'description'   => '',
+                'value'         => lang('Invoice Reminder'),
             ),
-            /*T*/'Enabled'/*/T*/       => array(
+            lang('Enabled')       => array(
                 'type'          => 'yesno',
-                'description'   => /*T*/'When enabled, late invoice reminders will be sent out to customers. This service should only run once per day to avoid sending reminders twice in the same day.'/*/T*/,
+                'description'   => lang('When enabled, late invoice reminders will be sent out to customers. This service should only run once per day to avoid sending reminders twice in the same day.'),
                 'value'         => '0',
             ),
-            /*T*/'Days to trigger reminder'/*/T*/       => array(
+            lang('Days to trigger reminder')       => array(
                 'type'          => 'text',
-                'description'   => /*T*/'<b>For late invoice remainder</b>: Enter the number of days after the due date to send a late invoice reminder.  You may enter more than one day by seperating the numbers with a comma.  <strong><i>Note: A number followed by a + sign indicates to send for all days greater than the previous number or use * to send reminders each day.</i></strong><br><br><b>For upcoming invoice reminder</b>: Enter the number of days before the due date to send an upcoming invoice reminder. You may enter more than one day by seperating the numbers by commas: these numbers must start with a - sign (negative numbers). <strong><i>Note: this only works if the invoice is already generated</i></strong>.<br><br><b>Example</b>: -10,-5,-1,1,5,10+ would send on the tenth days before the due date, five days before, one day before, one day late, five days late and ten or more days late'/*/T*/,
+                'description'   => lang('<b>For late invoice remainder</b>: Enter the number of days after the due date to send a late invoice reminder.  You may enter more than one day by seperating the numbers with a comma.  <strong><i>Note: A number followed by a + sign indicates to send for all days greater than the previous number or use * to send reminders each day.</i></strong><br><br><b>For upcoming invoice reminder</b>: Enter the number of days before the due date to send an upcoming invoice reminder. You may enter more than one day by seperating the numbers by commas: these numbers must start with a - sign (negative numbers). <strong><i>Note: this only works if the invoice is already generated</i></strong>.<br><br><b>Example</b>: -10,-5,-1,1,5,10+ would send on the tenth days before the due date, five days before, one day before, one day late, five days late and ten or more days late'),
                 'value'         => '-10,-5,-1,1,5,10+',
             ),
-            /*T*/'Run schedule - Minute'/*/T*/  => array(
+            lang('Run schedule - Minute')  => array(
                 'type'          => 'text',
-                'description'   => /*T*/'Enter number, range, list or steps'/*/T*/,
+                'description'   => lang('Enter number, range, list or steps'),
                 'value'         => '0',
                 'helpid'        => '8',
             ),
-            /*T*/'Run schedule - Hour'/*/T*/  => array(
+            lang('Run schedule - Hour')  => array(
                 'type'          => 'text',
-                'description'   => /*T*/'Enter number, range, list or steps'/*/T*/,
+                'description'   => lang('Enter number, range, list or steps'),
                 'value'         => '0',
             ),
-            /*T*/'Run schedule - Day'/*/T*/  => array(
+            lang('Run schedule - Day')  => array(
                 'type'          => 'text',
-                'description'   => /*T*/'Enter number, range, list or steps'/*/T*/,
+                'description'   => lang('Enter number, range, list or steps'),
                 'value'         => '*',
             ),
-            /*T*/'Run schedule - Month'/*/T*/  => array(
+            lang('Run schedule - Month')  => array(
                 'type'          => 'text',
-                'description'   => /*T*/'Enter number, range, list or steps'/*/T*/,
+                'description'   => lang('Enter number, range, list or steps'),
                 'value'         => '*',
             ),
-            /*T*/'Run schedule - Day of the week'/*/T*/  => array(
+            lang('Run schedule - Day of the week')  => array(
                 'type'          => 'text',
-                'description'   => /*T*/'Enter number in range 0-6 (0 is Sunday) or a 3 letter shortcut (e.g. sun)'/*/T*/,
+                'description'   => lang('Enter number in range 0-6 (0 is Sunday) or a 3 letter shortcut (e.g. sun)'),
                 'value'         => '*',
             ),
         );
