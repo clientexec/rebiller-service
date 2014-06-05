@@ -107,6 +107,7 @@ class PluginRebiller extends ServicePlugin
             $this->user->lang('Balance Due'),
             $this->user->lang('Days Overdue'),
         );
+
         return $returnArray;
     }
 
