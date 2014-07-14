@@ -70,7 +70,7 @@ class PluginRebiller extends ServicePlugin
 
         foreach($invoicesList as $invoiceData){
             if($invoiceData['days'] > 0){
-                if($invoiceData['autopaymen'] == 1){
+                if($invoiceData['autopayment'] == 1){
                     $countTransactions = $billingGateway->countInvoiceTransactions($invoiceData['invoiceId']);
                     if($countTransactions == 0){
                         continue;
