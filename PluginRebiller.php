@@ -34,7 +34,7 @@ class PluginRebiller extends ServicePlugin
             lang('Summary E-mail Subject')     => array(
                 'type'          => 'text',
                 'description'   => lang('E-mail subject for the summary notification.'),
-                'value'         => 'Auto Mailer Summary',
+                'value'         => 'Invoice Reminder Summary',
             ),
             lang('Days to trigger reminder')       => array(
                 'type'          => 'text',
