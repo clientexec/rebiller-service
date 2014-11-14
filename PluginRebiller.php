@@ -3,6 +3,7 @@ require_once 'modules/admin/models/ServicePlugin.php';
 require_once 'modules/admin/models/StatusAliasGateway.php' ;
 require_once 'modules/billing/models/BillingGateway.php';
 include_once 'modules/billing/models/Currency.php';
+require_once 'library/CE/NE_MailGateway.php';
 /**
 * @package Plugins
 */
@@ -24,6 +25,16 @@ class PluginRebiller extends ServicePlugin
                 'type'          => 'yesno',
                 'description'   => lang('When enabled, late invoice reminders will be sent out to customers. This service should only run once per day to avoid sending reminders twice in the same day.'),
                 'value'         => '0',
+            ),
+            lang('Summary E-mail')     => array(
+                'type'          => 'textarea',
+                'description'   => lang('E-mail addresses to which a summary of the notified invoices will be sent.  (Leave blank if you do not wish to receive a summary)'),
+                'value'         => '',
+            ),
+            lang('Summary E-mail Subject')     => array(
+                'type'          => 'text',
+                'description'   => lang('E-mail subject for the summary notification.'),
+                'value'         => 'Auto Mailer Summary',
             ),
             lang('Days to trigger reminder')       => array(
                 'type'          => 'text',
@@ -68,6 +79,11 @@ class PluginRebiller extends ServicePlugin
         $billingGateway = new BillingGateway($this->user);
         $invoicesList = $billingGateway->getUnpaidInvoicesDueDays($arrDays);
 
+        $invoicesNotified = array(
+            "Late"     => array(),
+            "Upcoming" => array()
+        );
+
         foreach($invoicesList as $invoiceData){
             if($invoiceData['days'] > 0){
                 if($invoiceData['autopayment'] == 1){
@@ -76,13 +92,48 @@ class PluginRebiller extends ServicePlugin
                         continue;
                     }
                 }
+                $invoicesNotified["Late"][] = $invoiceData['invoiceId'];
                 $billingGateway->sendInvoiceEmail($invoiceData['invoiceId'],"Overdue Invoice Template");
             }else{
+                $invoicesNotified["Upcoming"][] = $invoiceData['invoiceId'];
                 $billingGateway->sendInvoiceEmail($invoiceData['invoiceId'],"Invoice Template");
             }
         }
 
-        return array($this->user->lang('%s invoice reminders were sent', count($invoicesList)));
+        if($this->settings->get('plugin_rebiller_Summary E-mail') != ""){
+            $summaryEmail = '';
+            if(count($invoicesNotified["Late"]) > 0){
+                $summaryEmail .= $this->user->lang("Late invoices").":\n";
+                $summaryEmail .= implode(', ', $invoicesNotified["Late"])."\n";
+                $summaryEmail .= "\n";
+            }
+
+            if(count($invoicesNotified["Upcoming"]) > 0){
+                $summaryEmail .= $this->user->lang("Upcoming invoices").":\n";
+                $summaryEmail .= implode(', ', $invoicesNotified["Upcoming"])."\n";
+                $summaryEmail .= "\n";
+            }
+
+            if($summaryEmail != ''){
+                $summaryEmail = $this->user->lang("Invoice Reminder has emailed the following invoices").":\n"
+                                ."\n"
+                                .$summaryEmail;
+                $destinataries = explode("\r\n", $this->settings->get('plugin_rebiller_Summary E-mail'));
+
+                foreach($destinataries as $destinatary){
+                    $mailGateway = new NE_MailGateway();
+                    $mailGateway->mailMessageEmail(
+                        $summaryEmail,
+                        $this->settings->get('Support E-mail'),
+                        $this->settings->get('Company Name'),
+                        $destinatary,
+                        "",
+                        $this->settings->get('plugin_rebiller_Summary E-mail Subject')
+                    );
+                }
+            }
+        }
+        return array($this->user->lang('%s invoice reminders were sent', (count($invoicesNotified["Late"]) + count($invoicesNotified["Upcoming"]))));
     }
 
     function pendingItems()
